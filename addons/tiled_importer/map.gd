@@ -163,6 +163,18 @@ func _parsebase64Data(rawStr):
 			pass
 	return array
 
+func _parseXMLGidData(parser):
+	var array = IntArray()
+	while(parser.read() != ERR_FILE_EOF):
+		if parser.get_node_type() == parser.NODE_ELEMENT:
+			if "tile" == parser.get_node_name():
+				var gid = _xmlNodeAttrValue(parser, "gid", 0)
+				array.push_back(gid)
+				print(gid)
+			else:
+				break
+	return array
+
 ################################# JSON Parser #################################
 
 func _parseJsonContent(jsonContent):
@@ -246,6 +258,7 @@ func _parseXMLContent(xmlContent):
 			while(err != ERR_FILE_EOF):
 				iterated = false
 				if parser.get_node_type() == parser.NODE_ELEMENT:
+					print(parser.get_node_name())
 					if "map" == parser.get_node_name():
 						meta["version"] = _xmlNodeAttrValue(parser, "version", 1)
 						meta["orientation"] = _xmlNodeAttrValue(parser, "orientation", "orthogonal")
@@ -277,7 +290,6 @@ func _parseXMLContent(xmlContent):
 								if "tileset" == parser.get_node_name():
 									iterated = true
 									break
-						print(meta["properties"])
 					# tilesets
 					elif "tileset" == parser.get_node_name():
 						var tileset = {}
@@ -330,11 +342,11 @@ func _parseXMLContent(xmlContent):
 								elif "tileset" == parser.get_node_name():
 									iterated = true
 									break
+								else:
+									break
 						meta["tilesets"].append(tileset)
-					if iterated:
-						continue
 					# layers
-					elif "layer" == parser.get_node_name():
+					if "layer" == parser.get_node_name():
 						var layer = {}
 						layer["name"] = _xmlNodeAttrValue(parser, "name", "Unnamed")
 						layer["width"] = _xmlNodeAttrValue(parser, "width", 0)
@@ -364,23 +376,27 @@ func _parseXMLContent(xmlContent):
 												break
 								if "data" == parser.get_node_name():
 									var data = {}
-									data["encoding"] = _xmlNodeAttrValue(parser, "encoding", "")
-									var content = ""
-									if parser.read() != ERR_FILE_EOF and parser.get_node_type() == parser.NODE_TEXT:
-										content = parser.get_node_data()
-									if data["encoding"] == "csv":
-										data["content"] = _parseCSVData(content)
-									elif data["encoding"] == "base64":
-										data["content"] = _parsebase64Data(content)
-									# TODO: XML tile gid
-									elif data["encoding"] == "":
-										data["content"] = IntArray()
-									# TODO Other tile gid
+									data["encoding"] = _xmlNodeAttrValue(parser, "encoding", "xml")
+									if data["encoding"] == "xml":
+										data["content"] = _parseXMLGidData(parser)
+										if parser.get_node_name() == "layer":
+											iterated = true
 									else:
-										data["content"] = IntArray()
+										var content = ""
+										if parser.read() != ERR_FILE_EOF and parser.get_node_type() == parser.NODE_TEXT:
+											content = parser.get_node_data()
+										if data["encoding"] == "csv":
+											data["content"] = _parseCSVData(content)
+										elif data["encoding"] == "base64":
+											data["content"] = _parsebase64Data(content)
+										# TODO Other tile gid
+										else:
+											data["content"] = IntArray()
 									layer["data"] = data
 									break
 						meta["layers"].append(layer)
+				if iterated:
+					continue
 				# iterater current element
 				err = parser.read()
 	return meta

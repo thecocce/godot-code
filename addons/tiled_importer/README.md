@@ -8,12 +8,18 @@ Import tile maps from [Tiled](http://www.mapeditor.org/)
 * Custom properties for map and layers
 * All kind of tileset
 * Formats:
-  - TMX with CSV
-  - JSON with CSV
-* Orientations: orthogonal and isometric for now.
+  - TMX
+    - CSV
+    - XML
+  - JSON
+    - CSV
 
-This plugin import textures, tilesets and map as resources into Godot.
+* Orientations:
+  - orthogonal
+  - isometric
 
-Map is saved as scene(Node2D) contains layers(TileMap).
+This plugin import textures, tilesets and maps as resources into Godot.
 
-Custom properties were writen into scripts of Map scene or layers.
+Maps are saved as scenes(Node2D) contain layers(TileMap).
+
+Custom properties were writen into scripts of Map scenes or layers.

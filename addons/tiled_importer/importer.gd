@@ -93,7 +93,7 @@ func _ready():
 	dialog.set_hide_on_ok(false)
 	dialog.get_ok().connect("pressed", self, "_confirmed")
 	dialog.set_pos(Vector2(get_viewport_rect().size.width/2 - dialog.get_rect().size.width/2, get_viewport_rect().size.height/2 - dialog.get_rect().size.height/2))
-	
+
 func _browseInput():
 	fileDialog.set_mode(FileDialog.MODE_OPEN_FILE)
 	fileDialog.set_access(FileDialog.ACCESS_FILESYSTEM)
