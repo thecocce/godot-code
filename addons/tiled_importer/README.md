@@ -7,7 +7,9 @@ Import tile maps from [Tiled](http://www.mapeditor.org/)
 * All properties of layer
 * Custom properties for map and layers
 * All kind of tileset
-* Formats: TMX with CSV tile layer format for now.
+* Formats:
+  - TMX with CSV
+  - JSON with CSV
 * Orientations: orthogonal and isometric for now.
 
 This plugin import textures, tilesets and map as resources into Godot.

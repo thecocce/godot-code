@@ -86,13 +86,14 @@ func _parse(fileContent, format):
 	if format == FORMAT_TMX:
 		meta = _parseXMLContent(fileContent)
 	elif format == FORMAT_JSON:
-		meta = null
+		meta = _parseJsonContent(fileContent)
 	if meta != null:
 		tileset.clear()
 		textures.clear()
 		layers = []
 		var metaDir = _getParentDir(metaFilePath)
 		# Create script
+		script = "tool\nextends Node2D\n\n"
 		script += _exportDictionary(meta["properties"])
 		# Create tileset
 		var tileCount = 0
@@ -162,6 +163,74 @@ func _parsebase64Data(rawStr):
 			pass
 	return array
 
+################################# JSON Parser #################################
+
+func _parseJsonContent(jsonContent):
+	var meta = {};
+	if meta.parse_json(jsonContent) == OK:
+		if not meta.has("properties"):
+			meta["properties"] = {}
+		for tileset in meta["tilesets"]:
+			var tiles = []
+			if tileset.has("tiles"):
+				var rawTiles = tileset["tiles"]
+				for i in range(rawTiles.size()):
+					var tile = {}
+					tile["id"] = tileset["firstgid"] + i
+					tile["posX"] = 0
+					tile["posY"] = 0
+					tile["width"] = tileset["tilewidth"]
+					tile["height"] = tileset["tileheight"]
+					tile["source"] = rawTiles[str(i)]["image"]
+					tile["trans"] = Color(1,1,1,1)
+					if tileset.has("transparentcolor"):
+						tile["trans"] = Color(tileset["transparentcolor"])
+					tiles.append(tile)
+			else:
+				for i in range(tileset["tilecount"]):
+					var tile = {}
+					tile["id"] = tileset["firstgid"] + i
+					if  tileset["columns"] == 0:
+						tile["posX"] = tileset["spacing"]
+						tile["posY"] = i * tileset["tileheight"] + (i+1) * tileset["margin"]
+					else:
+						tileset["columns"] = int(tileset["columns"])
+						var column = (i%tileset["columns"])
+						var row = (i/tileset["columns"])
+						tile["posX"] = column * tileset["tilewidth"] + (column+1) * tileset["spacing"]
+						tile["posY"] = row * tileset["tileheight"] +  (row+1) * tileset["margin"]
+					tile["width"] = tileset["tilewidth"]
+					tile["height"] = tileset["tileheight"]
+					tile["source"] = tileset["image"]
+					tile["trans"] = Color(1,1,1,1)
+					if tileset.has("transparentcolor"):
+						tile["trans"] = Color(tileset["transparentcolor"])
+					tiles.append(tile)
+			tileset["tiles"] = tiles
+		for layer in meta["layers"]:
+			var rawData = layer["data"]
+			var data = {}
+			data["encoding"] = "csv"
+			if layer.has("encoding"):
+				data["encoding"] = layer["encoding"]
+			if data["encoding"] == "csv":
+				data["content"] = rawData
+			elif data["encoding"] == "base64":
+				data["content"] = _parsebase64Data(rawData)
+			# TODO Other tile gid
+			else:
+				data["content"] = IntArray()
+			layer["data"] = data
+			if not layer.has("offsetx"):
+				layer["offsetx"] = 0
+			if not layer.has("offsety"):
+				layer["offsety"] = 0
+			if not layer.has("properties"):
+				layer["properties"] = {}
+	else:
+		meta = null
+	return meta
+
 ################################# XML Parser ##################################
 
 func _parseXMLContent(xmlContent):
@@ -178,7 +247,7 @@ func _parseXMLContent(xmlContent):
 				iterated = false
 				if parser.get_node_type() == parser.NODE_ELEMENT:
 					if "map" == parser.get_node_name():
-						meta["version"] = _xmlNodeAttrValue(parser, "version", "1.0")
+						meta["version"] = _xmlNodeAttrValue(parser, "version", 1)
 						meta["orientation"] = _xmlNodeAttrValue(parser, "orientation", "orthogonal")
 						meta["renderorder"] = _xmlNodeAttrValue(parser, "renderorder", "right-down")
 						meta["width"] = _xmlNodeAttrValue(parser, "width", 0)
