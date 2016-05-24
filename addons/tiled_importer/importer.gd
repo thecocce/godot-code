@@ -40,7 +40,10 @@ func import(path, meta):
 		var dir = path.substr(0, path.find_last("/"))
 		# Save textures
 		for k in map.textures:
-			ResourceSaver.save(str(dir,"/",_getFileName(path),".",_getFileName(k),".tex"), map.textureMap[k])
+			var tex = map.textureMap[k]
+			var tp = str(dir,"/",_getFileName(path),".",_getFileName(k),".tex")
+			tex.set_path(tp)
+			ResourceSaver.save(tp, tex)
 		# Save tileset
 		map.tileset.set_import_metadata(meta)
 		ResourceSaver.save(str(dir,"/", _getFileName(path),".tilesets",".res"), map.tileset)
@@ -111,7 +114,10 @@ func _browseOutput():
 	fileDialog.add_filter("*.res")
 	fileDialog.add_filter("*.xscn")
 	fileDialog.add_filter("*.xml")
-	fileDialog.set_current_file(".tscn")
+	var presetname = _getFileName(inputField.get_text())
+	if presetname == null:
+		presetname = ""
+	fileDialog.set_current_file(str(presetname,".tscn"))
 	fileDialog.popup()
 
 func _fileSelected(path):
