@@ -24,6 +24,7 @@ margin/bottom = -497.5
 popup/exclusive = false
 window/title = "Import tile map"
 dialog/hide_on_ok = false
+__meta__ = { "_edit_group_":true, "_edit_lock_":true, "_editor_collapsed":true }
 
 [node name="VBox" type="VBoxContainer" parent="Dialog"]
 
