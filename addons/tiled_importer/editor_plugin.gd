@@ -1,13 +1,13 @@
 tool
 extends EditorPlugin
 
-var importerPlugin = null 
+var importerPlugin = null
 var importer = preload("./importer_gui.tscn").instance()
 
 func _enter_tree():
 	importer.connect("confim_import", self, "_rowImport")
 	get_base_control().add_child(importer)
-	
+
 	importerPlugin = ImportPlugin.new()
 	importerPlugin.connect("show_import_dialog", self, "_showDialog")
 	importerPlugin.connect("import_map", self, "_importMap")
@@ -17,11 +17,9 @@ func _exit_tree():
 	remove_import_plugin(importerPlugin)
 
 func _showDialog(from):
-	print(from)
 	importer.showDialog(from)
 
 func _importMap(path, meta):
-	print(path, meta.get_options())
 	importer.import(path, meta)
 
 func _rowImport(path, meta):
@@ -33,7 +31,7 @@ class ImportPlugin extends EditorImportPlugin:
 	signal import_map(path, from)
 
 	func get_name():
-		return "tiled"
+		return "com.geequlim.gdplugin.importer.tiled"
 
 	func get_visible_name():
 		return "TileMap from Tiled"
