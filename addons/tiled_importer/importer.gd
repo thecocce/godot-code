@@ -1,5 +1,5 @@
 tool
-extends Node2D
+extends Control
 
 var MapParser = preload("map.gd")
 var map = MapParser.new()

@@ -2,13 +2,20 @@
 
 [ext_resource path="res://addons/tiled_importer/importer.gd" type="Script" id=1]
 
-[node name="Node2D" type="Node2D"]
+[node name="Node2D" type="Control"]
 
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 0.0
+margin/bottom = 0.0
 script/script = ExtResource( 1 )
 
 [node name="Dialog" type="ConfirmationDialog" parent="."]
 
-visibility/visible = false
 anchor/left = 3
 anchor/top = 3
 anchor/right = 3
@@ -39,7 +46,6 @@ margin/top = 10.0
 margin/right = 10.0
 margin/bottom = 45.0
 alignment = 0
-__meta__ = { "_editor_collapsed":true }
 
 [node name="Label 2" type="Label" parent="Dialog/VBox"]
 
@@ -49,7 +55,7 @@ size_flags/horizontal = 2
 margin/left = 0.0
 margin/top = 0.0
 margin/right = 439.0
-margin/bottom = 16.0
+margin/bottom = 13.0
 text = "Tile map file generate by Tiled"
 percent_visible = 1.0
 lines_skipped = 0
@@ -62,9 +68,9 @@ focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 20.0
+margin/top = 17.0
 margin/right = 439.0
-margin/bottom = 43.0
+margin/bottom = 40.0
 alignment = 0
 __meta__ = { "_editor_collapsed":true }
 
@@ -78,6 +84,7 @@ margin/left = 0.0
 margin/top = 0.0
 margin/right = 408.0
 margin/bottom = 23.0
+focus_mode = 2
 
 [node name="Button" type="Button" parent="Dialog/VBox/Input"]
 
@@ -90,6 +97,8 @@ margin/top = 0.0
 margin/right = 439.0
 margin/bottom = 23.0
 toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
 text = " ... "
 flat = false
 
@@ -99,9 +108,9 @@ focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 margin/left = 0.0
-margin/top = 47.0
+margin/top = 44.0
 margin/right = 439.0
-margin/bottom = 63.0
+margin/bottom = 57.0
 text = "Save as scene"
 percent_visible = 1.0
 lines_skipped = 0
@@ -114,9 +123,9 @@ focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 67.0
+margin/top = 61.0
 margin/right = 439.0
-margin/bottom = 90.0
+margin/bottom = 84.0
 alignment = 0
 __meta__ = { "_editor_collapsed":true }
 
@@ -130,6 +139,7 @@ margin/left = 0.0
 margin/top = 0.0
 margin/right = 408.0
 margin/bottom = 23.0
+focus_mode = 2
 
 [node name="Button" type="Button" parent="Dialog/VBox/Output"]
 
@@ -142,6 +152,8 @@ margin/top = 0.0
 margin/right = 439.0
 margin/bottom = 23.0
 toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
 text = " ... "
 flat = false
 
@@ -151,9 +163,9 @@ focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 margin/left = 0.0
-margin/top = 94.0
+margin/top = 88.0
 margin/right = 439.0
-margin/bottom = 110.0
+margin/bottom = 101.0
 text = "Map informations"
 percent_visible = 1.0
 lines_skipped = 0
@@ -166,9 +178,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 3
 margin/left = 0.0
-margin/top = 114.0
+margin/top = 105.0
 margin/right = 439.0
-margin/bottom = 384.0
+margin/bottom = 387.0
 caret/caret_blink = false
 caret/caret_blink_speed = 0.65
 
@@ -178,7 +190,7 @@ focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 margin/left = 0.0
-margin/top = 388.0
+margin/top = 391.0
 margin/right = 439.0
 margin/bottom = 404.0
 custom_colors/font_color = Color( 0.929688, 0.323552, 0.138, 1 )
