@@ -168,10 +168,11 @@ func import(path, meta):
 	path = meta.get_option("tarScene")
 	var srcfile = meta.get_option("srcfile")
 	if map.loadFromFile(srcfile):
+		meta.set_editor('com.geequlim.gdplugin.importer.tiled')
 		meta.set_source_md5(0, File.new().get_md5(srcfile))
 		var mapScene = _processSubRes(path, meta)
 		# The import meta data was attached to tileset
-		# mapScene.set_import_metadata(meta)
+		mapScene.set_import_metadata(meta)
 		ResourceSaver.save(path, mapScene)
 
 func _processSubRes(scenePath, imptMeta):
@@ -301,7 +302,7 @@ class TextureCache extends Reference:
 			_src_md5_map[src] = md5
 			_src_tex_map[src] = tex
 		return tex
-		
+
 	func get_ref(src):
 		if _src_tex_map.has(src):
 			return _src_tex_map[src]

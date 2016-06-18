@@ -67,15 +67,20 @@ func _parseCSVData(rawStr):
 				array.push_back(int(gid))
 	return array
 
-# TODO: Parser base64 Data
-func _parsebase64Data(rawStr):
+# Parser base64 Data
+func _parseBase64Data(rawStr):
 	var array = IntArray()
-	rawStr = rawStr.strip_edges()
-	var bytes = (Marshalls.base64_to_raw(rawStr))
-	# TODO: conver usigned bytes to signed int
-	if bytes.size() % 4 == 0:
-		for i in range(0, bytes.size(), 4):
-			pass
+	if type_exists("RawPacker"):
+		rawStr = rawStr.strip_edges()
+		var bytes = (Marshalls.base64_to_raw(rawStr))
+		var sg = ""
+		for i in range(bytes.size()/4):
+			sg += "I"
+		var raw_packer = RawPacker.new()
+		print(sg.length())
+		array = raw_packer.unpack(sg, bytes)
+		print(array.size())
+		
 	return array
 
 func _parseXMLGidData(parser):
@@ -138,12 +143,15 @@ func _parseJsonContent(jsonContent):
 			var rawData = layer["data"]
 			var data = {}
 			data["encoding"] = "csv"
+			data["compression"] = ""
 			if layer.has("encoding"):
 				data["encoding"] = layer["encoding"]
+			if layer.has("compression"):
+				data["compression"] = layer["compression"]
 			if data["encoding"] == "csv":
 				data["content"] = rawData
 			elif data["encoding"] == "base64":
-				data["content"] = _parsebase64Data(rawData)
+				data["content"] = _parseBase64Data(rawData)
 			# TODO Other tile gid
 			else:
 				data["content"] = IntArray()
@@ -291,6 +299,7 @@ func _parseXMLContent(xmlContent):
 								if "data" == parser.get_node_name():
 									var data = {}
 									data["encoding"] = _xmlNodeAttrValue(parser, "encoding", "xml")
+									data["compression"] = _xmlNodeAttrValue(parser, "compression", "")
 									if data["encoding"] == "xml":
 										data["content"] = _parseXMLGidData(parser)
 										if parser.get_node_name() == "layer":
@@ -302,7 +311,7 @@ func _parseXMLContent(xmlContent):
 										if data["encoding"] == "csv":
 											data["content"] = _parseCSVData(content)
 										elif data["encoding"] == "base64":
-											data["content"] = _parsebase64Data(content)
+											data["content"] = _parseBase64Data(content)
 										# TODO Other tile gid
 										else:
 											data["content"] = IntArray()

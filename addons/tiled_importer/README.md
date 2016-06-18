@@ -11,8 +11,10 @@ Import tile maps from [Tiled](http://www.mapeditor.org/)
   - TMX
     - CSV
     - XML
+    - *Base64* [rawpacker](https://github.com/jrimclean/rawpacker) module is required
   - JSON
     - CSV
+    - *Base64* [rawpacker](https://github.com/jrimclean/rawpacker) module is required
 
 * Orientations:
   - orthogonal
